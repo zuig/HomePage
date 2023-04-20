@@ -56,42 +56,60 @@ var quick_list_preinstall = {
         explain: "GitHub",
     },
     '6': {
+        title: "ChatGPT",
+        url: "https://chat.openai.com/",
+        img: "./icon/chatgpt.png",
+        explain: "ChatGPT",
+    },
+    '7': {
+        title: "Civitai",
+        url: "https://civitai.com/",
+        img: "./icon/ai.png",
+        explain: "Civit Ai",
+    },
+    '8': {
+        title: "UWA博客",
+        url: "https://blog.uwa4d.com/",
+        img: "./icon/unity.png",
+        explain: "UWA博客",
+    },
+    '9': {
         title: "阿里图标",
         url: "https://www.iconfont.cn/",
         img: "./icon/iconfont.svg",
         explain: "阿里图标",
     },
-    '7': {
+    '10': {
         title: "NetZBlog",
         url: "https://blog.zuig.net/",
         img: "./icon/z1.png",
         explain: "NetZBlog",
     },
-    '8': {
+    '11': {
         title: "EuZBlog",
         url: "https://blog.zuig.eu.org/",
         img: "./icon/z2.png",
         explain: "EuZBlog",
     },
-    '9': {
+    '12': {
         title: "V2EX",
         url: "https://www.v2ex.com/",
         img: "./icon/v2ex.png",
         explain: "V2EX",
     },
-    '10': {
-        title: "Epicgames",
+    '13': {
+        title: "Epic",
         url: "https://store.epicgames.com/zh-CN/",
         img: "./icon/epic.png",
-        explain: "Epicgames",
+        explain: "Epic Games",
     },
-    '11': {
+    '14': {
         title: "Steam",
         url: "https://store.steampowered.com/",
         img: "./icon/steam.ico",
         explain: "Steam",
     },
-    '12': {
+    '15': {
         title: "scp基金会",
         url: "http://scp-wiki-cn.wikidot.com/",
         img: "./icon/scp.png",
