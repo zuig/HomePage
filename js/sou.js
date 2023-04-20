@@ -32,24 +32,66 @@ var quick_list_preinstall = {
         explain: "油管",
     },
     '2': {
+        title: "哔哩哔哩",
+        url: "https://www.bilibili.com/",
+        img: "./icon/bilibili.png",
+        explain: "哔哩哔哩 (゜-゜)つロ 干杯~",
+    },
+    '3': {
+        title: "Netflix",
+        url: "https://www.netflix.com/",
+        img: "./icon/netflix.png",
+        explain: "奈飞",
+    },
+    '4': {
+        title: "知乎",
+        url: "https://www.zhihu.com/",
+        img: "./icon/zhihu.png",
+        explain: "知乎",
+    },
+    '5': {
         title: "GitHub",
         url: "https://github.com/",
         img: "./icon/github.ico",
         explain: "GitHub",
     },
-    '3': {
+    '6': {
+        title: "阿里图标",
+        url: "https://www.iconfont.cn/",
+        img: "./icon/iconfont.svg",
+        explain: "阿里图标",
+    },
+    '7': {
+        title: "NetZBlog",
+        url: "https://blog.zuig.net/",
+        img: "./icon/z1.png",
+        explain: "NetZBlog",
+    },
+    '8': {
+        title: "EuZBlog",
+        url: "https://blog.zuig.eu.org/",
+        img: "./icon/z2.png",
+        explain: "EuZBlog",
+    },
+    '9': {
         title: "V2EX",
         url: "https://www.v2ex.com/",
         img: "./icon/v2ex.png",
         explain: "V2EX",
     },
-    '4': {
+    '10': {
+        title: "Epicgames",
+        url: "https://store.epicgames.com/zh-CN/",
+        img: "./icon/epic.png",
+        explain: "Epicgames",
+    },
+    '11': {
         title: "Steam",
         url: "https://store.steampowered.com/",
         img: "./icon/steam.ico",
         explain: "Steam",
     },
-    '5': {
+    '12': {
         title: "scp基金会",
         url: "http://scp-wiki-cn.wikidot.com/",
         img: "./icon/scp.png",
