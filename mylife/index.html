@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Life Expectancy Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      label {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      input[type="number"],
+      input[type="date"] {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 20px;
+        width: 300px;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      table {
+        margin: 50px auto;
+        border-collapse: collapse;
+        font-size: 20px;
+        white-space: nowrap;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ccc;
+      }
+
+      th {
+        font-weight: bold;
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <label for="lifeExpectancy">预期寿命:</label>
+      <input type="number" id="lifeExpectancy" value="75">
+
+      <label for="birthDate">出生日期:</label>
+      <input type="date" id="birthDate" value="1990-04-02">
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>年龄</th>
+          <th>月龄</th>
+          <th>周龄</th>
+          <th>日龄</th>
+          <th>时龄</th>
+          <th>分龄</th>
+          <th>秒龄</th>
+        </tr>
+      <thead>
+      <tbody>
+        <tr>
+          <td id="ageInYears"></td>
+          <td id="ageInMonths"></td>
+          <td id="ageInWeeks"></td>
+          <td id="ageInDays"></td>
+          <td id="ageInHours"></td>
+          <td id="ageInMinutes"></td>
+          <td id="ageInSeconds"></td>
+        </tr>
+      </tbody>
+      </thead>
+        <tr>
+          <th>预期剩余年龄</th>
+          <th>预期剩余月龄</th>
+          <th>预期剩余周龄</th>
+          <th>预期剩余日龄</th>
+          <th>预期剩余时龄</th>
+          <th>预期剩余分龄</th>
+          <th>预期剩余秒龄</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="remainingYears"></td>
+          <td id="remainingMonths"></td>
+          <td id="remainingWeeks"></td>
+          <td id="remainingDays"></td>
+          <td id="remainingHours"></td>
+          <td id="remainingMinutes"></td>
+          <td id="remainingSeconds"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      function calculate() {
+        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
+        var birthDate = new Date(document.getElementById("birthDate").value);
+
+        var now = new Date();
+        var ageInMilliseconds = now.getTime() - birthDate.getTime();
+        var ageInSeconds = Math.floor(ageInMilliseconds / 1000);
+        var ageInMinutes = Math.floor(ageInSeconds / 60);
+        var ageInHours = Math.floor(ageInMinutes / 60);
+        var ageInDays = Math.floor(ageInHours / 24);
+        var ageInWeeks = Math.floor(ageInDays / 7);
+        var ageInMonths = (now.getFullYear() - birthDate.getFullYear()) * 12 + (now.getMonth() - birthDate.getMonth());
+        var ageInYears = Math.floor(ageInMonths / 12);
+
+        var remainingYears = lifeExpectancy - ageInYears;
+        var remainingMonths = remainingYears * 12;
+        var remainingWeeks = remainingYears * 52;
+        var remainingDays = remainingYears * 365;
+        var remainingHours = remainingDays * 24;
+        var remainingMinutes = remainingHours * 60;
+        var remainingSeconds = remainingMinutes * 60;
+
+        // Update age and remaining time on the table
+        document.getElementById("ageInYears").textContent = ageInYears;
+        document.getElementById("ageInMonths").textContent = ageInMonths;
+        document.getElementById("ageInWeeks").textContent = ageInWeeks;
+        document.getElementById("ageInDays").textContent = ageInDays;
+        document.getElementById("ageInHours").textContent = ageInHours;
+        document.getElementById("ageInMinutes").textContent = ageInMinutes;
+        document.getElementById("ageInSeconds").textContent = ageInSeconds;
+
+        document.getElementById("remainingYears").textContent = remainingYears;
+        document.getElementById("remainingMonths").textContent = remainingMonths;
+        document.getElementById("remainingWeeks").textContent = remainingWeeks;
+        document.getElementById("remainingDays").textContent = remainingDays;
+        document.getElementById("remainingHours").textContent = remainingHours;
+        document.getElementById("remainingMinutes").textContent = remainingMinutes;
+        document.getElementById("remainingSeconds").textContent = remainingSeconds;
+      }
+
+      // Call the calculate function initially and whenever the input values change
+      calculate();
+      document.getElementById("lifeExpectancy").addEventListener("input", calculate);
+      document.getElementById("birthDate").addEventListener("input", calculate);
+    </script>
+  </body>
+</html>
