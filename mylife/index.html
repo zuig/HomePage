@@ -10,7 +10,8 @@
 
       form {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: center;
         align-items: center;
         margin-top: 50px;
       }
@@ -107,7 +108,7 @@
         </tr>
       </tbody>
     </table>
-
+    <p id="countdown" align="center"></p>
     <script>
       function initBirthDate() {
         // 读取cookie中保存的出生日期
@@ -186,14 +187,34 @@
         document.getElementById("remainingSeconds").textContent = remainingSeconds;
       }
 
+      function countDownBirthDate() {
+        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
+        var birthDate = new Date(document.getElementById("birthDate").value);
+
+        // 计算剩余时间
+        var now = new Date();
+        var diff = lifeExpectancy * 365 * 24 * 60 * 60 * 1000 - (now - birthDate.getTime());
+        var seconds = Math.floor(diff / 1000);
+        var minutes = Math.floor(seconds / 60);
+        var hours = Math.floor(minutes / 60);
+        var days = Math.floor(hours / 24);
+
+        document.getElementById("countdown").textContent = '距离结束还有：' + days + '天 ' + (hours % 24) + '小时 ' + (minutes % 60) + '分钟 ' + (seconds % 60) + '秒';
+      }
+
       initBirthDate();
+
       // Call the calculate function initially and whenever the input values change
-      calculate();
       document.getElementById("lifeExpectancy").addEventListener("input", calculate);
       document.getElementById("birthDate").addEventListener("input", function () {
         calculate();
         saveBirthDate2Cookies();
       });
+
+      setInterval(function() {
+        countDownBirthDate();
+        calculate();
+      }, 1000);
     </script>
   </body>
 </html>
