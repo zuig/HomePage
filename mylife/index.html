@@ -109,6 +109,43 @@
     </table>
 
     <script>
+      function initBirthDate() {
+        // 读取cookie中保存的出生日期
+        var birthdate = getCookie("birthdate");
+
+        // 如果cookie中不存在，则使用默认值
+        if (birthdate == "") {
+          birthdate = "1990-04-02";
+        }
+
+        document.getElementById("birthDate").value = birthdate;
+      }
+
+      function saveBirthDate2Cookies() {
+        // 将出生日期保存到cookie中，有效期为30天
+        setCookie("birthdate", document.getElementById("birthDate").value, 30);
+      }
+
+      // 从cookie中获取值的函数
+      function getCookie(name) {
+        var cookies = document.cookie.split("; ");
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].split("=");
+          if (cookie[0] == name) {
+            return cookie[1];
+          }
+        }
+        return "";
+      }
+
+      // 将值保存到cookie中的函数
+      function setCookie(name, value, expiresDays) {
+        var date = new Date();
+        date.setTime(date.getTime() + (expiresDays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires + "; path=/";
+      }
+
       function calculate() {
         var lifeExpectancy = document.getElementById("lifeExpectancy").value;
         var birthDate = new Date(document.getElementById("birthDate").value);
@@ -149,10 +186,14 @@
         document.getElementById("remainingSeconds").textContent = remainingSeconds;
       }
 
+      initBirthDate();
       // Call the calculate function initially and whenever the input values change
       calculate();
       document.getElementById("lifeExpectancy").addEventListener("input", calculate);
-      document.getElementById("birthDate").addEventListener("input", calculate);
+      document.getElementById("birthDate").addEventListener("input", function () {
+        calculate();
+        saveBirthDate2Cookies();
+      });
     </script>
   </body>
 </html>
