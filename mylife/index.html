@@ -109,6 +109,7 @@
         </tr>
       </tbody>
     </table>
+    <p id="enddate" align="center"></p>
     <p id="countdown" align="center"></p>
     <script>
       function initBirthDate() {
@@ -162,13 +163,14 @@
         var ageInMonths = (now.getFullYear() - birthDate.getFullYear()) * 12 + (now.getMonth() - birthDate.getMonth());
         var ageInYears = Math.floor(ageInMonths / 12);
 
-        var remainingYears = lifeExpectancy - ageInYears;
-        var remainingMonths = remainingYears * 12;
-        var remainingWeeks = remainingYears * 52;
-        var remainingDays = remainingYears * 365;
-        var remainingHours = remainingDays * 24;
-        var remainingMinutes = remainingHours * 60;
-        var remainingSeconds = remainingMinutes * 60;
+        var remainingMilliseconds = lifeExpectancy * 365 * 24 * 60 * 60 * 1000 - ageInMilliseconds;
+        var remainingSeconds = Math.floor(remainingMilliseconds / 1000);
+        var remainingMinutes = Math.floor(remainingSeconds / 60);
+        var remainingHours = Math.floor(remainingMinutes / 60);
+        var remainingDays = Math.floor(remainingHours / 24);
+        var remainingWeeks = Math.floor(remainingDays / 7);
+        var remainingMonths = (parseInt(birthDate.getFullYear()) + parseInt(lifeExpectancy) - parseInt(now.getFullYear())) * 12 + (now.getMonth() - birthDate.getMonth());
+        var remainingYears = Math.floor(remainingMonths / 12);
 
         // Update age and remaining time on the table
         document.getElementById("ageInYears").textContent = ageInYears;
@@ -203,13 +205,37 @@
         document.getElementById("countdown").textContent = '距离结束还有：' + days + '天 ' + (hours % 24) + '小时 ' + (minutes % 60) + '分钟 ' + (seconds % 60) + '秒';
       }
 
+      function calEndDate() {
+        // 获取出生日期和人均寿命的值
+        var birthDate = document.getElementById("birthDate").value;
+        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
+
+        // 将出生日期转换为Date对象
+        var birthDateObj = new Date(birthDate);
+
+        // 计算结束日期，考虑到闰年，假设人均寿命单位为年
+        var endDateObj = new Date(Date.UTC(birthDateObj.getUTCFullYear() + parseInt(lifeExpectancy), birthDateObj.getUTCMonth(), birthDateObj.getUTCDate()));
+
+        // 将结束日期格式化为字符串
+        var endDate = endDateObj.toISOString().substring(0, 10);
+        document.getElementById("enddate").textContent = "结束日期：" + endDate
+      }
+
       initBirthDate();
       calculate();
       countDownBirthDate();
-      // Call the calculate function initially and whenever the input values change
-      document.getElementById("lifeExpectancy").addEventListener("input", calculate);
-      document.getElementById("birthDate").addEventListener("input", function () {
+      calEndDate();
+
+      function refreshDate() {
         calculate();
+        countDownBirthDate();
+        calEndDate();
+      }
+
+      // Call the calculate function initially and whenever the input values change
+      document.getElementById("lifeExpectancy").addEventListener("input", refreshDate);
+      document.getElementById("birthDate").addEventListener("input", function () {
+        refreshDate();
         saveBirthDate2Cookies();
       });
 
