@@ -139,8 +139,6 @@
 
       function calculate(birthDate, lifeExpectancy) {
         var now = new Date();
-        // console.log(now)
-        // console.log(birthDate)
         var ageInMilliseconds = now.getTime() - birthDate.getTime();
         var ageInSeconds = Math.floor(ageInMilliseconds / 1000);
         var ageInMinutes = Math.floor(ageInSeconds / 60);
@@ -152,7 +150,7 @@
 
         const endDate = calEndDate(birthDate, lifeExpectancy);
 
-        // 计算剩余时间，以毫秒为单位 (24 * 60 * 60 -1) * 1000差一秒就多活一天
+        // 计算剩余时间
         var remainingMilliseconds = Math.max(0, endDate.getTime() - now.getTime());
         var remainingSeconds = Math.floor(remainingMilliseconds / 1000);
         var remainingMinutes = Math.floor(remainingSeconds / 60);
@@ -189,16 +187,6 @@
         const minutes = Math.floor(remainingMilliseconds / 1000 / 60) % 60;
         const hours = Math.floor(remainingMilliseconds / 1000 / 60 / 60) % 24;
         const days = Math.floor(remainingMilliseconds / 1000 / 60 / 60 / 24);
-
-        const remainingDays = days + 1;  // 加 1 是因为剩余天数不包括当天
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const date = now.getDate();
-        const currentDays = new Date(year, month, 0).getDate();
-        const totalDays = currentDays + remainingDays;
-        const totalYears = Math.floor(totalDays / 365);
-        const totalMonths = Math.floor((totalDays % 365) / 30);
-        const totalDaysInMonth = totalDays - totalMonths * 30;
 
         document.getElementById("countdown").textContent = '距离结束还有：' + days + '天 ' + hours + '小时 ' + minutes + '分钟 ' + seconds + '秒';
       }
