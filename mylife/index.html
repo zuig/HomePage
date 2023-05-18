@@ -214,17 +214,21 @@
       calculate(birthDate, lifeExpectancy);
       countDownBirthDate(birthDate, lifeExpectancy);
 
-      var endDate = calEndDate(birthDate, lifeExpectancy)
-      document.getElementById("enddate").textContent = birthDate.toLocaleString() + " ~ " + endDate.toLocaleString();
+      function refreshEndDate() {
+        var endDate = calEndDate(birthDate, lifeExpectancy);
+        var manRetireDate = calEndDate(birthDate, 60);
+        var womanRetireDate = calEndDate(birthDate, 50);
+
+        document.getElementById("enddate").textContent = `${birthDate.toLocaleString()} → ${womanRetireDate.toLocaleString()}(女50岁退休) → ${manRetireDate.toLocaleString()}(男60岁退休) → ${endDate.toLocaleString()}`
+      }
+      refreshEndDate();
 
       function refreshDate() {
         lifeExpectancy = document.getElementById("lifeExpectancy").value;
         birthDate = new Date(document.getElementById("birthDate").value);
         calculate(birthDate, lifeExpectancy);
         countDownBirthDate(birthDate, lifeExpectancy);
-        
-        var endDate = calEndDate(birthDate, lifeExpectancy)
-        document.getElementById("enddate").textContent = birthDate.toLocaleString() + " ~ " + endDate.toLocaleString();
+        refreshEndDate();
       }
 
       document.getElementById("lifeExpectancy").addEventListener("input", refreshDate);
