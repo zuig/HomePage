@@ -112,18 +112,6 @@
     <p id="enddate" align="center"></p>
     <p id="countdown" align="center"></p>
     <script>
-      function initBirthDate() {
-        // 读取cookie中保存的出生日期
-        var birthdate = getCookie("birthdate");
-
-        // 如果cookie中不存在，则使用默认值
-        if (birthdate == "") {
-          birthdate = "1990-04-02";
-        }
-
-        document.getElementById("birthDate").value = birthdate;
-      }
-
       function saveBirthDate2Cookies() {
         // 将出生日期保存到cookie中，有效期为30天
         setCookie("birthdate", document.getElementById("birthDate").value, 30);
@@ -149,11 +137,10 @@
         document.cookie = name + "=" + value + "; " + expires + "; path=/";
       }
 
-      function calculate() {
-        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
-        var birthDate = new Date(document.getElementById("birthDate").value);
-
+      function calculate(birthDate, lifeExpectancy) {
         var now = new Date();
+        // console.log(now)
+        // console.log(birthDate)
         var ageInMilliseconds = now.getTime() - birthDate.getTime();
         var ageInSeconds = Math.floor(ageInMilliseconds / 1000);
         var ageInMinutes = Math.floor(ageInSeconds / 60);
@@ -163,14 +150,17 @@
         var ageInMonths = (now.getFullYear() - birthDate.getFullYear()) * 12 + (now.getMonth() - birthDate.getMonth());
         var ageInYears = Math.floor(ageInMonths / 12);
 
-        var remainingMilliseconds = lifeExpectancy * 365 * 24 * 60 * 60 * 1000 - ageInMilliseconds;
+        const endDate = calEndDate(birthDate, lifeExpectancy);
+
+        // 计算剩余时间，以毫秒为单位 (24 * 60 * 60 -1) * 1000差一秒就多活一天
+        var remainingMilliseconds = Math.max(0, endDate.getTime() - now.getTime());
         var remainingSeconds = Math.floor(remainingMilliseconds / 1000);
         var remainingMinutes = Math.floor(remainingSeconds / 60);
         var remainingHours = Math.floor(remainingMinutes / 60);
         var remainingDays = Math.floor(remainingHours / 24);
         var remainingWeeks = Math.floor(remainingDays / 7);
-        var remainingMonths = (parseInt(birthDate.getFullYear()) + parseInt(lifeExpectancy) - parseInt(now.getFullYear())) * 12 + (now.getMonth() - birthDate.getMonth());
-        var remainingYears = Math.floor(remainingMonths / 12);
+        var remainingYears = Math.floor(remainingMilliseconds / (365 * 24 * 60 * 60 * 1000));
+        var remainingMonths = Math.floor((remainingMilliseconds % (365 * 24 * 60 * 60 * 1000)) / (30 * 24 * 60 * 60 * 1000)) + remainingYears * 12;
 
         // Update age and remaining time on the table
         document.getElementById("ageInYears").textContent = ageInYears;
@@ -190,49 +180,65 @@
         document.getElementById("remainingSeconds").textContent = remainingSeconds;
       }
 
-      function countDownBirthDate() {
-        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
-        var birthDate = new Date(document.getElementById("birthDate").value);
-
+      function countDownBirthDate(birthDate, lifeExpectancy) {
         // 计算剩余时间
         var now = new Date();
-        var diff = lifeExpectancy * 365 * 24 * 60 * 60 * 1000 - (now - birthDate.getTime());
-        var seconds = Math.floor(diff / 1000);
-        var minutes = Math.floor(seconds / 60);
-        var hours = Math.floor(minutes / 60);
-        var days = Math.floor(hours / 24);
+        var endDate = calEndDate(birthDate, lifeExpectancy);
+        var remainingMilliseconds = Math.max(0, endDate.getTime() - now.getTime());
+        const seconds = Math.floor(remainingMilliseconds / 1000) % 60;
+        const minutes = Math.floor(remainingMilliseconds / 1000 / 60) % 60;
+        const hours = Math.floor(remainingMilliseconds / 1000 / 60 / 60) % 24;
+        const days = Math.floor(remainingMilliseconds / 1000 / 60 / 60 / 24);
 
-        document.getElementById("countdown").textContent = '距离结束还有：' + days + '天 ' + (hours % 24) + '小时 ' + (minutes % 60) + '分钟 ' + (seconds % 60) + '秒';
+        const remainingDays = days + 1;  // 加 1 是因为剩余天数不包括当天
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const currentDays = new Date(year, month, 0).getDate();
+        const totalDays = currentDays + remainingDays;
+        const totalYears = Math.floor(totalDays / 365);
+        const totalMonths = Math.floor((totalDays % 365) / 30);
+        const totalDaysInMonth = totalDays - totalMonths * 30;
+
+        document.getElementById("countdown").textContent = '距离结束还有：' + days + '天 ' + hours + '小时 ' + minutes + '分钟 ' + seconds + '秒';
       }
 
-      function calEndDate() {
-        // 获取出生日期和人均寿命的值
-        var birthDate = document.getElementById("birthDate").value;
-        var lifeExpectancy = document.getElementById("lifeExpectancy").value;
-
-        // 将出生日期转换为Date对象
-        var birthDateObj = new Date(birthDate);
-
-        // 计算结束日期，考虑到闰年，假设人均寿命单位为年
-        var endDateObj = new Date(Date.UTC(birthDateObj.getUTCFullYear() + parseInt(lifeExpectancy), birthDateObj.getUTCMonth(), birthDateObj.getUTCDate()));
-
-        // 将结束日期格式化为字符串
-        var endDate = endDateObj.toISOString().substring(0, 10);
-        document.getElementById("enddate").textContent = "结束日期：" + endDate
+      function calEndDate(birthDate, lifeExpectancy) {
+        const endYear = parseInt(birthDate.getFullYear()) + parseInt(lifeExpectancy);
+        //注意月份是从0起的
+        const endMonth = birthDate.getMonth() + 1;
+        const endDay = birthDate.getDate();
+        //2023-05-18 跟 2023-5-18创建的时间起点有区别
+        var dateStr = `${endYear}-${endMonth.toString().padStart(2, '0')}-${endDay.toString().padStart(2, '0')}`;
+        return new Date(dateStr);
       }
 
-      initBirthDate();
-      calculate();
-      countDownBirthDate();
-      calEndDate();
+      var birthdate = getCookie("birthdate");
+      // 如果cookie中不存在，则使用默认值
+      if (birthdate == "") {
+        birthdate = "1990-04-02";
+      }
+
+      var birthDate = new Date(birthdate);
+      var lifeExpectancy = document.getElementById("lifeExpectancy").value;
+      document.getElementById("birthDate").value = birthdate;
+
+      calculate(birthDate, lifeExpectancy);
+      countDownBirthDate(birthDate, lifeExpectancy);
+
+      var endDate = calEndDate(birthDate, lifeExpectancy)
+      document.getElementById("enddate").textContent = birthDate.toLocaleString() + " ~ " + endDate.toLocaleString();
 
       function refreshDate() {
-        calculate();
-        countDownBirthDate();
-        calEndDate();
+        lifeExpectancy = document.getElementById("lifeExpectancy").value;
+        birthDate = new Date(document.getElementById("birthDate").value);
+        calculate(birthDate, lifeExpectancy);
+        countDownBirthDate(birthDate, lifeExpectancy);
+        
+        var endDate = calEndDate(birthDate, lifeExpectancy)
+        document.getElementById("enddate").textContent = birthDate.toLocaleString() + " ~ " + endDate.toLocaleString();
       }
 
-      // Call the calculate function initially and whenever the input values change
       document.getElementById("lifeExpectancy").addEventListener("input", refreshDate);
       document.getElementById("birthDate").addEventListener("input", function () {
         refreshDate();
@@ -240,8 +246,8 @@
       });
 
       setInterval(function() {
-        countDownBirthDate();
-        calculate();
+        countDownBirthDate(birthDate, lifeExpectancy);
+        calculate(birthDate, lifeExpectancy);
       }, 1000);
     </script>
   </body>
